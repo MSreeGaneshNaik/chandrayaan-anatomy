@@ -1,0 +1,10 @@
+{
+  "name": "chandrayaan-anatomy-film",
+  "private": true,
+  "description": "Fonts for the film's title layer (overlay/overlay.html loads them from node_modules).",
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.2.0",
+    "@fontsource/ibm-plex-mono": "^5.2.0",
+    "@fontsource/tiro-devanagari-sanskrit": "^5.2.0"
+  }
+}
