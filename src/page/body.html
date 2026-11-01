@@ -1,0 +1,161 @@
+<header class="topbar" id="topbar">
+  <div class="topbar-in">
+    <a class="wordmark" href="#top" data-go="top"><b>Chandrayaan</b> Anatomy<span lang="hi">चंद्रयान</span></a>
+    <nav class="secnav" id="secnav" aria-label="Sections">
+      <a href="#figure" data-fig="stack">Launch</a>
+      <a href="#figure" data-fig="c3whole">Spacecraft</a>
+      <a href="#figure" data-fig="land3">Landing</a>
+      <a href="#figure" data-fig="j3All">Journey</a>
+      <a href="#engines-sec">Engines</a>
+      <a href="#missions">Missions</a>
+      <a href="#record">Flights</a>
+      <a href="#compare">Compare</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#next">What's next</a>
+      <a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page" id="top">
+  <header class="head">
+    <div>
+      <p class="eyebrow">Chandrayaan-1 · Chandrayaan-2 · Chandrayaan-3 · PSLV-XL · LVM3</p>
+      <h1>Chandrayaan Anatomy</h1>
+      <p class="lede" id="lede">India's three Moon missions, drawn part by part. Take every spacecraft apart, fire the rockets that launched them, fly Vikram's powered descent to the Moon's south polar region, and follow all three journeys on a to-scale Earth–Moon map.</p>
+    </div>
+    <div class="titleblock" aria-label="Drawing title block" id="titleblock"></div>
+  </header>
+
+  <div class="stage" id="figure">
+    <nav class="index" id="menu" aria-label="Parts index"></nav>
+    <section class="fig" id="fig" aria-label="Interactive drawing of the Chandrayaan spacecraft and their launch vehicles">
+      <canvas id="cv" aria-hidden="true"></canvas>
+      <div class="corner tl">Fig 1</div>
+      <div class="corner tr"><span id="figTitle">LVM3 · Second Launch Pad</span>
+        <button type="button" class="tog" id="aa" aria-pressed="true">Anti-aliasing <b>On</b></button>
+        <div class="camctl" role="group" aria-label="Camera">
+          <button type="button" class="tog" id="free" aria-pressed="false">Free cam <b>Off</b></button>
+          <div class="dragmode" role="group" aria-label="Left-drag does"><span>Drag</span><button type="button" data-mode="orbit" aria-pressed="true">Orbit</button><button type="button" data-mode="pan" aria-pressed="false">Pan</button></div>
+          <div class="zoomer"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zreset" aria-label="Reset view">⟲</button></div>
+        </div></div>
+      <div class="corner hint-top" id="hint">Hover or click a part to read it</div>
+      <div class="jlab" id="jlab" hidden aria-hidden="true"></div>
+      <div class="dlab" id="dlab" hidden aria-hidden="true"></div>
+      <div class="foot" id="foot">
+        <div class="foot-l">
+          <div class="firerow" id="fireRow" role="group" aria-label="Fire or cut one engine"></div>
+          <div class="bl">
+            <button type="button" class="pill" id="ign"><i></i><span>Ignite</span></button>
+            <button type="button" class="pill" id="apart" aria-pressed="false">Take apart</button>
+            <label class="mini-thr" for="thrMini"><span>Throttle</span><input type="range" id="thrMini" min="0" max="100" step="0.5" value="100"><output id="thrMiniOut" for="thrMini">100 %</output></label>
+          </div>
+          <div class="dstep" id="dstep" role="group" aria-label="Landing replay">
+            <button type="button" class="pill" id="dplay"><i></i><span>Play descent</span></button>
+            <div class="seg2" role="group" aria-label="Which landing"><button type="button" data-run="c3" aria-pressed="true">Chandrayaan-3 · 2023</button><button type="button" data-run="c2" aria-pressed="false">Chandrayaan-2 · 2019</button><button type="button" data-run="hop" aria-pressed="false">The hop</button></div>
+            <label class="scrub" for="dscrub"><span>Time</span><input type="range" id="dscrub" min="0" max="1000" step="1" value="0"></label>
+          </div>
+          <div class="jstep" id="jstep" role="group" aria-label="Step through the journey">
+            <div class="seg2" role="group" aria-label="Which mission"><button type="button" data-mis="C1" aria-pressed="false">C-1</button><button type="button" data-mis="C2" aria-pressed="false">C-2</button><button type="button" data-mis="C3" aria-pressed="true">C-3</button></div>
+            <button type="button" class="pill" id="jprev" aria-label="Previous stage">‹ Previous</button><span id="jpos"></span><button type="button" class="pill" id="jnext" aria-label="Next stage">Next ›</button>
+          </div>
+        </div>
+        <div class="br" id="readout" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+  <p class="caption" id="caption"></p>
+
+  <section class="detail" id="detail" aria-live="polite"></section>
+
+  <section class="console" id="engines-sec" aria-label="Propulsion controls">
+    <div class="panel">
+      <div class="panel-head"><h2>Propulsion</h2><span class="status" id="engStatus">Safed</span></div>
+      <div class="seg" id="groupSeg" role="group" aria-label="Engine to fire"></div>
+      <div class="cluster-row">
+        <svg id="cluster" viewBox="-60 -60 120 120" role="group" aria-label="Engine layout, seen from below. Click an engine to cut it."></svg>
+        <div class="ctl">
+          <div class="ctl-row">
+            <div class="lab"><label for="thr">Throttle</label><output id="thrOut" for="thr">100 %</output></div>
+            <input type="range" id="thr" min="0" max="100" step="0.5" value="100">
+          </div>
+          <div class="ctl-row">
+            <div class="lab"><label for="alt">Ambient altitude</label><output id="altOut" for="alt">Sea level</output></div>
+            <input type="range" id="alt" min="0" max="100" step="0.5" value="0">
+          </div>
+          <div class="btn-row">
+            <button type="button" class="big-btn off" id="ign2"><i></i><span>Ignite</span></button>
+            <button type="button" class="ghost-btn" id="allOn">All engines on</button>
+          </div>
+        </div>
+      </div>
+      <p class="note" id="engNote"></p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Live thrust</h2><span class="mono" id="engName" style="font-size:12px;color:var(--ink-2)"></span></div>
+      <div class="meter">
+        <div class="big" id="thrustBig">0<small>kN</small></div>
+        <div class="sub" id="thrustSub">0 kN</div>
+      </div>
+      <div>
+        <div class="bar" id="twBar"><b></b><em></em></div>
+        <div class="bar-scale" id="twScale"><span>0</span><span id="twMid"></span><span id="twMax"></span></div>
+      </div>
+      <dl class="kv" id="liveKV"></dl>
+    </div>
+  </section>
+
+  <section class="section" id="glanceSec" aria-labelledby="glH">
+    <div class="section-head"><h2 id="glH">Chandrayaan at a glance</h2><p>Three missions, two rockets, one landing near the south pole.</p></div>
+    <div class="glance glance8" id="glance"></div>
+  </section>
+
+  <section class="section" id="missions" aria-labelledby="misH">
+    <div class="section-head"><h2 id="misH">Three missions</h2><p>What flew, what happened, and where each spacecraft is on 31 October 2026.</p></div>
+    <div class="missions3" id="missions3"></div>
+  </section>
+
+  <section class="section" aria-labelledby="hwH">
+    <div class="section-head"><h2 id="hwH">Hardware</h2><p>Hover any part in Fig 1 and its sheet lights up here.</p></div>
+    <div class="specs" id="specs"></div>
+  </section>
+
+  <section class="section" aria-labelledby="insH">
+    <div class="section-head"><h2 id="insH">Thirty-two instruments</h2><p>Every science payload the three missions flew: who built it, where it rode and what it was for. Click a row to find it in Fig 1.</p></div>
+    <div class="table-wrap"><table id="insTable"></table></div>
+  </section>
+
+  <section class="section" aria-labelledby="engH">
+    <div class="section-head"><h2 id="engH">Engines</h2><p>Rated figures. Everything in the live panel is computed from this table.</p></div>
+    <div class="table-wrap"><table id="engTable"></table></div>
+    <div class="math" id="math"></div>
+  </section>
+
+  <section class="section" id="record" aria-labelledby="frH">
+    <div class="section-head"><h2 id="frH">Flight record</h2><p>Each launch from liftoff to spacecraft separation, from ISRO's event tables.</p></div>
+    <div class="seg2 frseg" id="frSeg" role="group" aria-label="Choose a launch"></div>
+    <div class="table-wrap"><table id="frTable"></table></div>
+    <p class="fine" id="frNote"></p>
+  </section>
+
+  <section class="section" id="compare" aria-labelledby="cmpH">
+    <div class="section-head"><h2 id="cmpH">Compared</h2><p>Each mission reused what the last one proved.</p></div>
+    <div class="table-wrap"><table id="cmpTable"></table></div>
+  </section>
+
+  <section class="section" id="timeline" aria-labelledby="tlH">
+    <div class="section-head"><h2 id="tlH">Programme timeline</h2><p>From the announcement in 2003 to the two missions now being built. Outlined years are plans and can still move.</p></div>
+    <ol class="tline" id="tl"></ol>
+  </section>
+
+  <section class="section" id="next" aria-labelledby="nextH">
+    <div class="section-head"><h2 id="nextH">What's next</h2><p>Two more missions go back to the south polar region. One brings the Moon home; the other digs for water.</p></div>
+    <div class="next2" id="next2"></div>
+  </section>
+
+  <footer id="sources">
+    <h3>Sources</h3>
+    <ol id="sourcesList"></ol>
+    <p class="fine">Compiled 31 October 2026. Mission status can change; ISRO is the final word. Geometry is drawn from published dimensions and photographs; where a dimension is not published it is drawn to fit and marked in its sheet.</p>
+  </footer>
+</div>

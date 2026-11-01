@@ -1,0 +1,8 @@
+numpy
+scipy
+soundfile
+pyloudnorm
+pillow
+playwright
+kokoro-onnx
+faster-whisper

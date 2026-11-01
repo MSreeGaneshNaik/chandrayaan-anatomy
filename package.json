@@ -1,0 +1,35 @@
+{
+  "name": "chandrayaan-anatomy",
+  "version": "1.0.0",
+  "description": "Interactive 3D technical drawing of Chandrayaan-1, 2 and 3: the spacecraft part by part, the PSLV-XL and LVM3 rockets that launched them, every engine down to its turbopumps, the landings replayed, and all three journeys on a to-scale map of the Earth and Moon.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:capture": "node scripts/build.mjs --capture",
+    "shot": "node scripts/shot.mjs",
+    "deploy": "sh scripts/deploy.sh"
+  },
+  "keywords": [
+    "chandrayaan",
+    "chandrayaan-3",
+    "isro",
+    "lvm3",
+    "pslv",
+    "vikram",
+    "pragyan",
+    "three.js",
+    "webgl",
+    "space",
+    "visualization"
+  ],
+  "author": "M. Sree Ganesh",
+  "license": "MIT",
+  "dependencies": {
+    "three": "0.160.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "mp4-muxer": "5.1.3"
+  }
+}

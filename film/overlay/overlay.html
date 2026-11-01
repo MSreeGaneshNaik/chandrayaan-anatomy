@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "Archivo"; src: url("../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+@font-face { font-family: "Plex Mono"; src: url("../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Plex Mono"; src: url("../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+@font-face { font-family: "Plex Mono"; src: url("../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "Tiro"; src: url("../node_modules/@fontsource/tiro-devanagari-sanskrit/files/tiro-devanagari-sanskrit-devanagari-400-normal.woff2") format("woff2"); }
+:root { --ink: #1d2024; --ink2: #565a61; --ink3: #8a8e94; --line2: #c4c4bd; --accent: #d9452b; --gold: #a9802d; --paper: #f6f6f3; }
+html, body { margin: 0; width: 1080px; height: 1350px; background: transparent; overflow: hidden; }
+#stage { position: absolute; inset: 0; }
+.el { position: absolute; left: 0; right: 0; text-align: center; will-change: auto; }
+.big { font-family: "Archivo"; font-stretch: 125%; font-weight: 640; font-size: 50px; line-height: 1.14; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; padding: 0 70px; text-wrap: balance; }
+.huge { white-space: nowrap; font-family: "Archivo"; font-stretch: 125%; font-weight: 760; font-size: 78px; line-height: 1.02; letter-spacing: 0.02em; color: var(--ink); text-transform: uppercase; padding: 0 50px; }
+.tc { white-space: nowrap; font-family: "Plex Mono"; font-weight: 500; font-size: 25px; letter-spacing: 0.14em; color: var(--ink2); text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.tc .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); margin-right: 16px; vertical-align: 2px; }
+.sub { font-family: "Plex Mono"; font-weight: 500; font-size: 21px; letter-spacing: 0.16em; color: var(--ink2); text-transform: uppercase; padding: 0 80px; line-height: 1.5; }
+.acc { color: var(--accent); }
+.big, .huge, .sub, .dev { text-shadow: 0 0 5px var(--paper), 0 0 12px var(--paper), 0 0 24px var(--paper), 0 0 40px var(--paper), 0 0 60px var(--paper); }
+.tc .box { background: color-mix(in srgb, var(--paper) 93%, transparent); padding: 8px 18px 8px 16px; box-shadow: 0 0 22px 10px color-mix(in srgb, var(--paper) 80%, transparent); }
+.dev { font-family: "Tiro"; font-size: 46px; color: var(--gold); letter-spacing: 0; }
+#border { position: absolute; inset: 26px; border: 1.5px solid var(--line2); }
+.tick { position: absolute; background: var(--line2); }
+.fig { position: absolute; bottom: 38px; font-family: "Plex Mono"; font-weight: 500; font-size: 15.5px; letter-spacing: 0.12em; color: var(--ink3); text-transform: uppercase; white-space: nowrap; }
+#figL { left: 44px; } #figR { right: 44px; }
+#tel { position: absolute; left: 62px; bottom: 92px; text-align: left; font-family: "Plex Mono"; text-transform: uppercase; color: var(--ink); font-variant-numeric: tabular-nums; }
+#tel .k { font-size: 17px; font-weight: 500; letter-spacing: 0.14em; color: var(--ink3); }
+#tel .v { font-size: 44px; font-weight: 500; letter-spacing: 0.02em; line-height: 1.05; margin-bottom: 10px; }
+#tel .row { display: flex; gap: 46px; }
+#tel .flag { font-size: 22px; font-weight: 600; letter-spacing: 0.14em; color: var(--accent); margin-top: 6px; }
+svg { position: absolute; inset: 0; overflow: visible; }
+.lab { position: absolute; font-family: "Plex Mono"; font-weight: 500; font-size: 17px; letter-spacing: 0.12em; color: var(--ink); text-transform: uppercase; white-space: nowrap; background: color-mix(in srgb, var(--paper) 88%, transparent); padding: 3px 7px; }
+.jl { position: absolute; font-family: "Plex Mono"; font-weight: 600; font-size: 20px; letter-spacing: 0.14em; color: var(--ink); text-transform: uppercase; white-space: nowrap; }
+.craft { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 22%, transparent); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="border"></div>
+  <div class="fig" id="figL"></div><div class="fig" id="figR">Chandrayaan Anatomy · Fig 1 interactive</div>
+  <svg id="svg" width="1080" height="1350"></svg>
+  <div id="tel"></div>
+  <div id="jlab"></div>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const eout = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+const fmt = (n, d = 0) => Number(n).toLocaleString("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/(\d),(?=\d{2},)/g, "$1").replace(/\B(?=(\d{3})+(?!\d))/g, (m) => m);
+const fmtInt = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+// ---------- the text track (seconds on the film clock) ----------
+// kind: big | huge | tc (typed) | sub | title ; y: px from top (centre of the block) ; inD/outD: transition lengths
+const TXT = [
+  { k: "tc", t: [0.3, 7.7], y: 96, html: "<span class=dot></span>Sriharikota · 14 Jul 2023 · 14:35 IST" },
+  { k: "big", t: [1.4, 4.2], y: 238, html: "This is not a render." },
+  { k: "big", t: [4.5, 7.7], y: 238, html: "It's a web page." },
+  { k: "sub", t: [4.9, 7.7], y: 312, html: "You can take it apart" },
+  { k: "dev", t: [8.25, 11.8], y: 150, html: "चंद्रयान" },
+  { k: "huge", t: [8.35, 11.8], y: 244, html: "Chandrayaan<br>Anatomy" },
+  { k: "sub", t: [8.9, 11.8], y: 352, html: "India's three missions to the Moon<br>drawn part by part" },
+  // 2008
+  { k: "tc", t: [12.05, 13.45], y: 560, html: "<span class=dot></span>22 Oct 2008 · 06:22 IST" },
+  { k: "huge", t: [12.2, 13.45], y: 660, html: "Chandrayaan-1" },
+  { k: "tc", t: [13.7, 18.4], y: 96, html: "<span class=dot></span>PSLV-C11 · four boosters lit on the ground" },
+  { k: "big", t: [18.65, 21.9], y: 1110, html: "It found signs of water on the Moon." },
+  // 2019
+  { k: "tc", t: [22.05, 23.45], y: 560, html: "<span class=dot></span>22 Jul 2019 · 14:43 IST" },
+  { k: "huge", t: [22.2, 23.45], y: 660, html: "Chandrayaan-2" },
+  { k: "tc", t: [23.7, 27.9], y: 96, html: "<span class=dot></span>CE-20 · liquid hydrogen · liquid oxygen" },
+  { k: "big", t: [23.9, 27.9], y: 1110, html: "India's own cryogenic engine." },
+  { k: "tc", t: [28.15, 32.5], y: 96, html: "<span class=dot></span>07 Sep 2019 · Vikram · powered descent", cut: true },
+  { k: "big", t: [32.6, 35.42], y: 640, html: "≈ 330 metres above the Moon,<br>the signal stopped." },
+  // 2023
+  { k: "tc", t: [35.55, 36.95], y: 560, html: "<span class=dot></span>14 Jul 2023 · 14:35 IST" },
+  { k: "huge", t: [35.7, 36.95], y: 660, html: "Chandrayaan-3" },
+  { k: "tc", t: [37.2, 40.9], y: 96, html: "<span class=dot></span>Propulsion module · 440 N engine" },
+  { k: "big", t: [37.3, 40.9], y: 1110, html: "We went back." },
+  { k: "tc", t: [41.2, 44.9], y: 96, html: "<span class=dot></span>Earth to Moon · drawn to scale" },
+  { k: "sub", t: [41.6, 44.9], y: 1180, html: "Launch 14 Jul · landing 23 Aug 2023" },
+  { k: "tc", t: [45.2, 50.4], y: 96, html: "<span class=dot></span>23 Aug 2023 · Vikram · final descent" },
+  { k: "big", t: [50.9, 53.95], y: 236, html: "The first near the Moon's south pole." },
+  // outro
+  { k: "tc", t: [54.15, 57.9], y: 96, html: "<span class=dot></span>Nine engines · true relative scale" },
+  { k: "big", t: [54.3, 57.9], y: 1092, html: "Every rocket.<br>Every engine." },
+  { k: "sub", t: [54.9, 57.9], y: 1196, html: "Every number sourced" },
+  { k: "big", t: [58.3, 61.9], y: 1092, html: "One web page." },
+  { k: "sub", t: [58.8, 61.9], y: 1162, html: "Open it · fire it · take it apart" },
+  { k: "dev", t: [62.3, 66.5], y: 520, html: "चंद्रयान" },
+  { k: "huge", t: [62.4, 66.5], y: 625, html: "Chandrayaan<br>Anatomy" },
+  { k: "sub", t: [63.0, 66.5], y: 748, html: "One HTML file · built with Claude" },
+  { k: "tc", t: [63.5, 66.5], y: 820, html: "<span class=dot></span><span class=acc>Link in the comments</span>" },
+];
+const FIGS = [[0, 12, "Fig 1 · LVM3-M4 · Second Launch Pad"], [13.5, 16, "Fig 2 · PSLV-XL · PSLV-C11"], [16, 18.5, "Fig 2a · PSLV-XL · taken apart"], [18.5, 22, "Fig 3 · Chandrayaan-1 · 2008"],
+  [23.5, 28, "Fig 4 · CE-20 · taken apart"], [28, 32.5, "Fig 5 · Vikram · 2019 attempt, replayed"], [37, 41, "Fig 6 · Chandrayaan-3 · integrated module"], [41, 45, "Fig 7 · Earth–Moon · to scale"],
+  [45, 50.5, "Fig 8 · Vikram · 2023 landing, replayed"], [50.5, 54, "Fig 9 · Vikram and Pragyan · Shiv Shakti"], [54, 58, "Fig 10 · every engine, lit"], [58, 62, "Fig 11 · LVM3 · taken apart"]];
+
+const stage = $("#stage");
+for (const T of TXT) {
+  const d = document.createElement("div");
+  d.className = "el " + (T.k === "dev" ? "dev" : T.k);
+  d.innerHTML = T.k === "tc" ? "" : T.html; T.el = d; stage.append(d);
+  if (T.k === "tc") { T.full = T.html; const tmp = document.createElement("div"); tmp.innerHTML = T.html; T.dot = !!tmp.querySelector(".dot"); T.plain = tmp.textContent; T.acc = !!tmp.querySelector(".acc"); }
+}
+function place(T) { const r = T.el.getBoundingClientRect(); T.el.style.top = (T.y - r.height / 2) + "px"; }
+
+// corner registration ticks
+for (const [x, y] of [[26, 26], [1054, 26], [26, 1324], [1054, 1324]]) {
+  const h = document.createElement("div"); h.className = "tick"; Object.assign(h.style, { left: x - 12 + "px", top: y + "px", width: "24px", height: "1.5px" }); stage.append(h);
+  const v = document.createElement("div"); v.className = "tick"; Object.assign(v.style, { left: x + "px", top: y - 12 + "px", width: "1.5px", height: "24px" }); stage.append(v);
+}
+
+// ---------- the frame ----------
+window.render = function (t, M) {
+  M = M || {};
+  let sig = "";
+  for (const T of TXT) {
+    const [a, b] = T.t, on = t >= a && t < b;
+    if (!on) { if (T.el.style.display !== "none") T.el.style.display = "none"; continue; }
+    T.el.style.display = "";
+    const inD = T.k === "huge" || T.k === "big" ? 0.55 : 0.4, outD = T.cut ? 0 : 0.3;
+    const pin = eout((t - a) / inD), pout = outD ? clamp((t - (b - outD)) / outD, 0, 1) : 0;
+    if (T.k === "tc") {   // typed, one character at a time, then held
+      const n = Math.round(T.plain.length * clamp((t - a) / 0.5, 0, 1));
+      const txt = T.plain.slice(0, n), caret = n < T.plain.length ? "<span class=acc>▍</span>" : "";
+      const html = "<span class=box>" + (T.dot ? "<span class=dot></span>" : "") + (T.acc ? `<span class=acc>${txt}</span>` : txt) + caret + "</span>";
+      if (T._h !== html) { T.el.innerHTML = html; T._h = html; }
+      T.el.style.opacity = (1 - pout).toFixed(3); T.el.style.filter = pout ? `blur(${(pout * 6).toFixed(2)}px)` : "none";
+      place(T); sig += `|${T.y}:${n}:${pout.toFixed(3)}`; continue;
+    }
+    const op = pin * (1 - pout), bl = (1 - pin) * 14 + pout * 8, ls = (1 - pin) * (T.k === "huge" ? 0.07 : 0.2);
+    T.el.style.opacity = op.toFixed(3);
+    T.el.style.filter = bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : "none";
+    T.el.style.transform = `translateY(${((1 - pin) * 12).toFixed(2)}px)`;
+    if (T.k !== "dev") T.el.style.letterSpacing = `calc(${T.k === "huge" ? 0.02 : T.k === "sub" ? 0.16 : 0.06}em + ${ls.toFixed(3)}em)`;
+    place(T); sig += `|${T.y}:${op.toFixed(3)}:${bl.toFixed(2)}`;
+  }
+  // figure label
+  const F = FIGS.find(([a, b]) => t >= a && t < b);
+  const fl = F ? F[2] : (t >= 62 ? "" : "");
+  if ($("#figL").textContent !== fl) $("#figL").textContent = fl;
+  const fr = t < 62 ? "Chandrayaan Anatomy" : "";
+  if ($("#figR").textContent !== fr) $("#figR").textContent = fr;
+  sig += "|" + fl + fr;
+  // telemetry (descents)
+  const tel = $("#tel"); let th = "";
+  if (M.alt != null) {
+    const lit = M.lit ?? "", alt = Math.max(0, M.alt), sink = Math.abs(M.vz || 0);
+    th = `<div class=row><div><div class=k>Altitude</div><div class=v>${alt >= 100 ? fmtInt(alt) : alt.toFixed(1)} m</div></div><div><div class=k>Sink rate</div><div class=v>${sink.toFixed(1)} m/s</div></div></div>` +
+      `<div class=row><div><div class=k>${M.vh != null ? "Across" : "Engines lit"}</div><div class=v>${M.vh != null ? Math.abs(M.vh).toFixed(1) + " m/s" : lit}</div></div>${M.vh != null ? `<div><div class=k>Engines lit</div><div class=v>${lit}</div></div>` : ""}</div>` +
+      (M.flag ? `<div class=flag>${M.flag}</div>` : "");
+  }
+  if (tel._h !== th) { tel.innerHTML = th; tel._h = th; }
+  tel.style.opacity = M.telOp ?? 1;
+  sig += "|" + th + (M.telOp ?? 1);
+  // CE-20 callouts and journey tags
+  let sv = "", jl = "";
+  if (M.k) {
+    const names = ["LH₂ turbopump", "LOX turbopump", "Gas generator", "Thrust chamber", "Nozzle extension"];
+    const pts = M.k.map((p, i) => ({ x: p[0], y: p[1], n: names[i], i, a: clamp((t - (M.k0 + i * 0.16)) / 0.4, 0, 1) }));
+    const L = pts.filter((p) => p.x < 540).sort((a, b) => a.y - b.y), R = pts.filter((p) => p.x >= 540).sort((a, b) => a.y - b.y);
+    const lay = (arr, side) => arr.forEach((p, j) => {
+      const ly = clamp(p.y, 190, 980) + (j - (arr.length - 1) / 2) * 6, lx = side < 0 ? 70 : 1010;
+      p.ly = ly; p.lx = lx;
+    });
+    lay(L, -1); for (let j = 1; j < L.length; j++) if (L[j].ly - L[j - 1].ly < 40) L[j].ly = L[j - 1].ly + 40;
+    lay(R, 1); for (let j = 1; j < R.length; j++) if (R[j].ly - R[j - 1].ly < 40) R[j].ly = R[j - 1].ly + 40;
+    for (const p of [...L, ...R]) {
+      if (p.a <= 0) continue;
+      const left = p.lx < 540, ex = left ? p.lx + 8 : p.lx - 8, kx = left ? Math.min(p.x - 30, ex + 160) : Math.max(p.x + 30, ex - 160);
+      const len = p.a;
+      sv += `<polyline points="${p.x},${p.y} ${kx},${p.ly} ${ex},${p.ly}" fill="none" stroke="#1d2024" stroke-width="1.4" stroke-dasharray="${(len * 600).toFixed(0)} 600" opacity="${(0.25 + 0.75 * p.a).toFixed(2)}"/>` +
+        `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#d9452b" opacity="${p.a.toFixed(2)}"/>`;
+      jl += `<div class=lab style="top:${(p.ly - 15).toFixed(1)}px;${left ? `left:${p.lx - 26}px` : `right:${1080 - p.lx - 26}px`};opacity:${p.a.toFixed(2)}">${p.n}</div>`;
+    }
+  }
+  if (M.craft) {
+    const [ex, ey] = M.earth, [mx, my] = M.moon, [cx, cy] = M.craft;
+    jl += `<div class=jl style="left:${ex - 40}px;top:${ey + 26}px">Earth</div><div class=jl style="left:${mx - 34}px;top:${my + 26}px">Moon</div>`;
+    jl += `<div class=craft style="left:${cx}px;top:${cy}px"></div><div class=jl style="${cx > 760 ? `right:${1080 - cx + 16}px` : `left:${cx + 18}px`};top:${cy - 44}px;font-size:16px">Chandrayaan-3</div>`;
+    const day = Math.min(40, Math.max(0, Math.floor(M.day + 1e-6)));
+    jl += `<div class="el big" style="top:1060px;font-variant-numeric:tabular-nums">Day ${String(day).padStart(2, "0")}${day >= 40 ? "." : ""}</div>`;
+  }
+  if ($("#svg")._h !== sv) { $("#svg").innerHTML = sv; $("#svg")._h = sv; }
+  if ($("#jlab")._h !== jl) { $("#jlab").innerHTML = jl; $("#jlab")._h = jl; }
+  sig += "|" + sv + jl;
+  return sig;
+};
+window.ready = document.fonts.ready.then(() => true);
+</script>
+</body>
+</html>
