@@ -1,0 +1,10 @@
+node_modules
+dist/artifact.html
+dist/capture.html
+dist/capture-artifact.html
+shots/
+film/work/
+.DS_Store
+*.log
+__pycache__/
+film/out/
